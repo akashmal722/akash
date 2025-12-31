@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year</title>
+
+<style>
+:root{
+    --gold:#ffd700;
+    --dark:#0a0a0a;
+    --blue:#0a1a3a;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:radial-gradient(circle, #000, #111);
+}
+
+/* THEME */
+body.gold{ background:radial-gradient(circle,#000,#111); }
+body.blue{ background:radial-gradient(circle,#020024,#090979); }
+
+/* STORY SIZE (Instagram safe) */
+.story{
+    width:360px;
+    height:640px;
+    position:relative;
+}
+
+/* PARTICLES */
+.particle{
+    position:absolute;
+    top:-10px;
+    width:6px;
+    height:6px;
+    background:var(--gold);
+    border-radius:50%;
+    opacity:.8;
+    animation:fall linear infinite;
+}
+@keyframes fall{
+    to{ transform:translateY(700px); }
+}
+
+/* COVER PAGE */
+.cover{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:var(--gold);
+    text-align:center;
+    animation:fadeIn 2s ease;
+}
+.cover h1{
+    font-size:32px;
+    text-shadow:0 0 20px var(--gold);
+}
+.cover p{
+    margin-top:15px;
+    font-size:15px;
+    opacity:.85;
+}
+.tap{
+    margin-top:40px;
+    font-size:13px;
+    letter-spacing:3px;
+    opacity:.7;
+}
+
+/* PAGE 2 */
+.page{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transform:scale(.8);
+    opacity:0;
+    pointer-events:none;
+    transition:all 1.2s cubic-bezier(.25,.8,.25,1);
+}
+
+/* OPEN STATE */
+.story.open .cover{
+    opacity:0;
+    transform:scale(1.2);
+    transition:1s;
+}
+.story.open .page{
+    opacity:1;
+    transform:scale(1);
+    pointer-events:auto;
+}
+
+/* CARD */
+.card{
+    width:90%;
+    background:rgba(0,0,0,.85);
+    border-radius:20px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 0 60px rgba(255,215,0,.45);
+    animation:rise 1.4s ease;
+}
+@keyframes rise{
+    from{ transform:translateY(80px); opacity:0;}
+    to{ transform:translateY(0); opacity:1;}
+}
+
+.card h2{
+    color:var(--gold);
+    font-size:28px;
+    text-shadow:0 0 15px var(--gold);
+}
+.card h3{
+    color:#fff;
+    margin-top:6px;
+    font-size:18px;
+}
+.card p{
+    margin-top:18px;
+    font-size:14.5px;
+    line-height:1.8;
+    color:#eee;
+}
+.signature{
+    margin-top:22px;
+    color:var(--gold);
+    font-size:15px;
+}
+.time{
+    margin-top:6px;
+    font-size:12px;
+    opacity:.8;
+}
+
+/* CONTROLS */
+.controls{
+    position:absolute;
+    top:15px;
+    width:100%;
+    display:flex;
+    justify-content:space-around;
+}
+button{
+    padding:6px 10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body class="gold">
+
+<div class="story" onclick="openCard()">
+
+    <!-- PARTICLES -->
+    <script>
+        for(let i=0;i<35;i++){
+            document.write(`<div class="particle" style="
+            left:${Math.random()*360}px;
+            animation-duration:${3+Math.random()*5}s;
+            animation-delay:${Math.random()*5}s;"></div>`);
+        }
+    </script>
+
+    <!-- CONTROLS -->
+   
+
+    <!-- COVER -->
+    <div class="cover">
+        <h1>Season’s Greetings</h1>
+        <p>A special message awaits inside</p>
+        <div class="tap">TAP TO OPEN</div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page">
+        <div class="card">
+            <h2>Happy New Year</h2>
+            <h3 id="year"></h3>
+
+            <p>
+                As the new year unfolds, may it bring clarity to your vision,
+                confidence to your decisions, and balance to your life.
+                May every challenge shape your strength and every success
+                remind you how far you’ve come.
+            </p>
+
+            <div class="signature">
+                — Warm Regards<br>
+                <strong>Akash Mal</strong>
+            </div>
+
+            <div class="time" id="time"></div>
+        </div>
+    </div>
+</div>
+
+<!-- FIREWORK SOUND -->
+<audio id="fire">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4f7a71a4d8.mp3">
+</audio>
+
+<script>
+function openCard(){
+    document.querySelector('.story').classList.add('open');
+    document.getElementById('fire').play();
+    firework();
+}
+
+function setTheme(t){ document.body.className=t; }
+
+document.getElementById('year').innerText = "✨ " + new Date().getFullYear() + " ✨";
+
+setInterval(()=>{
+    document.getElementById('time').innerText =
+    new Date().toLocaleString();
+},1000);
+
+/* FIREWORK BURST */
+function firework(){
+    for(let i=0;i<25;i++){
+        let p=document.createElement('div');
+        p.className='particle';
+        p.style.left='180px';
+        p.style.top='200px';
+        p.style.animationDuration='1.5s';
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),1500);
+    }
+}
+
+/* QR SHARE */
+function showQR(){
+    window.open("https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=YOUR_LINK_HERE","_blank");
+}
+</script>
+
+</body>
+</html>
